@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Nirvon Studio</title>
+<meta name="description" content="Nirvon is an independent web design and development studio.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="tiles"></div>
+<div id="loader"><svg viewBox="0 0 100 100" fill="currentColor" aria-hidden="true"><use href="#mark"/></svg></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="mark" viewBox="0 0 100 100">
+      <polygon points="6,94 6,27 25,8 25,94"/>
+      <polygon points="31,8 47,8 72,94 56,94"/>
+      <polygon points="75,6 94,6 94,73 75,92"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="nav-wrap">
+  <nav class="nav" id="nav" aria-label="Main">
+    <a href="#home" class="brand" aria-label="Nirvon home"><svg viewBox="0 6 100 88" preserveAspectRatio="none" fill="currentColor" aria-hidden="true"><polygon points="6,94 6,27 25,8 25,94"/><polygon points="31,8 47,8 72,94 56,94"/><polygon points="75,6 94,6 94,73 75,92"/></svg><span aria-hidden="true">irvon</span></a>
+    <div class="links">
+      <a href="#home" data-r="home">Home</a>
+      <a href="#about" data-r="about">About</a>
+      <a href="#works" data-r="works">Work</a>
+      <a href="#services" data-r="services">Services</a>
+      <a href="#contact" data-r="contact">Contact</a>
+    </div>
+    <div class="nav-r">
+      <button class="tog" id="tog" aria-label="Switch light or dark theme"></button>
+      <a href="#contact" class="btn btn-solid"><span class="lbl"><span>Start a project</span><span>Start a project</span></span></a>
+      <button class="burger" id="burger" aria-label="Open menu"><span></span><span></span></button>
+    </div>
+  </nav>
+</div>
+<div id="mmenu" aria-hidden="true">
+  <a href="#home">Home</a><a href="#about">About</a><a href="#works">Work</a><a href="#services">Services</a><a href="#contact">Contact</a>
+</div>
+
+<main id="app"></main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="js/projects.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
