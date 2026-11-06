@@ -240,7 +240,7 @@ function pageAbout(){
       <div class="glowable"><span class="eyebrow">Principle</span><h3>Built to <em>last</em></h3><p>We hand over sites your team can run, with clean structure, real documentation and no lock-in.</p></div>
     </div>
     <div class="testi" style="grid-template-columns:1fr;margin-top:90px">
-      <div class="stats" style="flex-direction:row;flex-wrap:wrap"><div style="flex:1 1 180px;border-bottom:0;border-right:1px solid var(--line)"><b><span data-count="40">0</span><sup>+</sup></b><small>Projects shipped</small></div><div style="flex:1 1 180px;border-bottom:0;border-right:1px solid var(--line)"><b><span data-count="12">0</span></b><small>Industries served</small></div><div style="flex:1 1 180px;border-bottom:0;border-right:1px solid var(--line)"><b><span data-count="92">0</span><sup>%</sup></b><small>Clients who return</small></div><div style="flex:1 1 180px;border-bottom:0"><b><span data-count="6">0</span><sup>+</sup></b><small>Years of practice</small></div></div>
+      <div class="stats" style="flex-direction:row;flex-wrap:wrap"><div style="flex:1 1 180px;border-bottom:0;border-right:1px solid var(--line)"><b><span data-count="4">0</span></b><small>Projects shipped</small></div><div style="flex:1 1 180px;border-bottom:0;border-right:1px solid var(--line)"><b><span data-count="15">0</span></b><small>Ongoing projects</small></div><div style="flex:1 1 180px;border-bottom:0;border-right:1px solid var(--line)"><b><span data-count="3">0</span></b><small>Industries served</small></div><div style="flex:1 1 180px;border-bottom:0"><b><span data-count="1">0</span></b><small>Year of practice</small></div></div>
     </div>
   </div>
   ${footer()}`;
@@ -719,43 +719,60 @@ function initGallery(){
   renderer.toneMapping=T.ACESFilmicToneMapping; renderer.toneMappingExposure=1.05;
   host.prepend(renderer.domElement);
   const scene=new T.Scene(), cam=new T.PerspectiveCamera(30,1,.1,100);
-  scene.add(new T.HemisphereLight(0xc9ccff,0x0a0814,.7));
+  scene.add(new T.HemisphereLight(0xdcdde4,0x0a0814,.55));
   const key=new T.DirectionalLight(0xffffff,1.4); key.position.set(-5,9,7); scene.add(key);
-  const rim=new T.PointLight(0x7d6cff,3,26); rim.position.set(5,4.5,-4.5); scene.add(rim);
+  const rim=new T.PointLight(0x7d6cff,.9,26); rim.position.set(5,4.5,-4.5); scene.add(rim);
   const rim2=new T.PointLight(0x5ad1ff,1.1,26); rim2.position.set(-7,2,-3); scene.add(rim2);
   const front=new T.PointLight(0xffffff,.5,30); front.position.set(2,3,9); scene.add(front);
   // geometry helpers
   const rshape=(w,h,r)=>{const s=new T.Shape(),x=-w/2,y=-h/2;s.moveTo(x+r,y);s.lineTo(x+w-r,y);s.quadraticCurveTo(x+w,y,x+w,y+r);s.lineTo(x+w,y+h-r);s.quadraticCurveTo(x+w,y+h,x+w-r,y+h);s.lineTo(x+r,y+h);s.quadraticCurveTo(x,y+h,x,y+h-r);s.lineTo(x,y+r);s.quadraticCurveTo(x,y,x+r,y);return s;};
   const rplane=(w,h,r)=>{const g=new T.ShapeGeometry(rshape(w,h,r),16),p=g.attributes.position,uv=g.attributes.uv;for(let i=0;i<p.count;i++)uv.setXY(i,(p.getX(i)+w/2)/w,(p.getY(i)+h/2)/h);uv.needsUpdate=true;return K(g);};
   const rslab=(w,h,r,d)=>{const g=new T.ExtrudeGeometry(rshape(w,h,r),{depth:d,bevelEnabled:true,bevelThickness:.035,bevelSize:.035,bevelSegments:4,curveSegments:16});g.translate(0,0,-d/2);g.computeVertexNormals();return K(g);};
-  const metal=K(new T.MeshStandardMaterial({color:0xa7a5b2,metalness:.6,roughness:.3}));
+  const metal=K(new T.MeshStandardMaterial({color:0x1a1a1e,metalness:.5,roughness:.55}));
   const graphite=K(new T.MeshStandardMaterial({color:0x34333d,metalness:.65,roughness:.28}));
   const black=K(new T.MeshBasicMaterial({color:0x030305}));
   const rig=new T.Group(); scene.add(rig);
   // ---- laptop
   const laptop=new T.Group(); rig.add(laptop);
-  const LW=6.4,LD=4.3,BT=.16,LH=4.12;
-  const base=new T.Mesh(rslab(LW,LD,.3,BT),metal); base.rotation.x=-Math.PI/2; base.position.y=BT/2; laptop.add(base);
+  const LW=6.4,LD=4.3,BT=.12,LH=4.13,TAPER=.45;
+  const baseG=rslab(LW,LD,.3,BT);{const bp=baseG.attributes.position,z0=-BT/2-.035,H=BT+.07;for(let i=0;i<bp.count;i++){const f=1-(1-TAPER)*(LD/2-bp.getY(i))/LD;bp.setZ(i,z0+(bp.getZ(i)-z0)*f);}bp.needsUpdate=true;baseG.computeVertexNormals();}
+  const base=new T.Mesh(baseG,metal); base.rotation.x=-Math.PI/2; base.position.y=BT/2; laptop.add(base);
   const kc=document.createElement("canvas");kc.width=1024;kc.height=690;const k=kc.getContext("2d");
-  k.fillStyle="#8a8896";k.fillRect(0,0,1024,690);k.fillStyle="#17161d";
-  for(let r=0;r<6;r++)for(let c=0;c<14;c++){const kw=r===5&&c>3&&c<10?0:52;if(r===5&&c===4){rr(k,92+4*60,58+r*58,6*60-8,48,7);k.fill();continue;}if(!kw)continue;rr(k,92+c*60,58+r*58,kw,48,7);k.fill();}
-  k.fillStyle="#9a98a6";rr(k,352,430,320,215,18);k.fill();k.strokeStyle="rgba(0,0,0,.25)";k.lineWidth=2;k.stroke();
-  const deckTex=K(new T.CanvasTexture(kc));deckTex.encoding=T.sRGBEncoding;
-  const deck=new T.Mesh(rplane(LW-.34,LD-.34,.22),K(new T.MeshStandardMaterial({map:deckTex,metalness:.45,roughness:.42})));
-  deck.rotation.x=-Math.PI/2; deck.position.y=BT+.04; laptop.add(deck);
-  const lid=new T.Group(); lid.position.set(0,BT+.02,-LD/2+.08); laptop.add(lid);
-  const lidBody=new T.Mesh(rslab(LW,LH,.3,.11),metal); lidBody.position.set(0,LH/2,-.1); lid.add(lidBody);
-  const bezel=new T.Mesh(rplane(LW-.06,LH-.06,.27),black); bezel.position.set(0,LH/2,.0); lid.add(bezel);
-  const SW=5.9,SH=SW/1.6;
+  k.fillStyle="#8e8e96";k.fillRect(0,0,1024,690);
+  const KX=151,KY=84,KP=52,KS=46,KR=50,KH=42;k.fillStyle="#5c5c64";rr(k,KX-10,KY-10,13*KP+KS+20,5*KR+KH+20,12);k.fill();k.fillStyle="#0b0b0e";
+  for(let r=0;r<6;r++)for(let c=0;c<14;c++){if(r===5&&c===4){rr(k,KX+4*KP,KY+r*KR,6*KP-6,KH,6);k.fill();continue;}if(r===5&&c>4&&c<10)continue;rr(k,KX+c*KP,KY+r*KR,KS,KH,6);k.fill();}
+  k.fillStyle="#9c9ca4";rr(k,302,424,420,232,14);k.fill();k.strokeStyle="rgba(255,255,255,.22)";k.lineWidth=3;k.stroke();
+  const deckTex=K(new T.CanvasTexture(kc));deckTex.encoding=T.sRGBEncoding;deckTex.anisotropy=renderer.capabilities.getMaxAnisotropy();
+  const deck=new T.Mesh(rplane(LW-.34,LD-.34,.22),K(new T.MeshStandardMaterial({map:deckTex,color:0x34343a,metalness:.2,roughness:.75})));
+  const DROP=(BT+.07)*(1-TAPER);deck.rotation.x=-Math.PI/2+Math.atan(DROP/LD); deck.position.y=BT+.035-DROP/2+.006; laptop.add(deck);
+  const lid=new T.Group(); lid.position.set(0,BT+.05,-LD/2+.08); laptop.add(lid);
+  {const hg=new T.Mesh(K(new T.CylinderGeometry(.055,.055,LW-1.3,24)),graphite);hg.rotation.z=Math.PI/2;hg.position.set(0,BT+.03,-LD/2+.02);laptop.add(hg);}
+  const lidBody=new T.Mesh(rslab(LW,LH,.3,.07),metal); lidBody.position.set(0,LH/2,-.07); lid.add(lidBody);
+  const bezel=new T.Mesh(rplane(LW-.06,LH-.06,.27),black); bezel.position.set(0,LH/2,.002); lid.add(bezel);
+  const SW=6.06,SH=SW/1.6;
   const scrMat=K(new T.MeshBasicMaterial({color:0xffffff,toneMapped:false}));
-  const scr=new T.Mesh(rplane(SW,SH,.05),scrMat); scr.position.set(0,LH/2+.07,.004); lid.add(scr);
+  const scr=new T.Mesh(rplane(SW,SH,.05),scrMat); scr.position.set(0,LH/2,.006); lid.add(scr);
   const gc=document.createElement("canvas");gc.width=256;gc.height=256;const gx=gc.getContext("2d");const gg=gx.createLinearGradient(0,0,256,256);gg.addColorStop(0,"rgba(255,255,255,.16)");gg.addColorStop(.45,"rgba(255,255,255,0)");gg.addColorStop(1,"rgba(255,255,255,.03)");gx.fillStyle=gg;gx.fillRect(0,0,256,256);
   const glassTex=K(new T.CanvasTexture(gc));
-  const glass=new T.Mesh(rplane(SW,SH,.05),K(new T.MeshBasicMaterial({map:glassTex,transparent:true,blending:T.AdditiveBlending,depthWrite:false,toneMapped:false})));glass.position.set(0,LH/2+.07,.008);lid.add(glass);
+  const glass=new T.Mesh(rplane(SW,SH,.05),K(new T.MeshBasicMaterial({map:glassTex,transparent:true,blending:T.AdditiveBlending,depthWrite:false,toneMapped:false})));glass.position.set(0,LH/2,.01);lid.add(glass);
   // ---- phone
   const phone=new T.Group(); rig.add(phone);
   const PW=1.56,PH=3.26,PSW=1.43,PSH=PSW/(360/780);
-  const pbody=new T.Mesh(rslab(PW,PH,.25,.15),graphite); pbody.position.z=-.115; phone.add(pbody);
+  const PD=.07,PZB=-.006-(PD+.07);
+  const pAlu=K(new T.MeshStandardMaterial({color:0x1a1a1e,metalness:.55,roughness:.42}));
+  const pbody=new T.Mesh(rslab(PW,PH,.25,PD),pAlu); pbody.position.z=-.006-(PD+.07)/2; phone.add(pbody);
+  // back: frosted glass panel, camera module, subtle brand mark (all face -z)
+  const back=new T.Group(); back.rotation.y=Math.PI; back.position.z=PZB-.002; phone.add(back);
+  back.add(new T.Mesh(rplane(PW-.1,PH-.1,.21),K(new T.MeshStandardMaterial({color:0x0d0d10,metalness:.25,roughness:.7}))));
+  const camMod=new T.Group(); camMod.position.set(-(PW/2-.3),PH/2-.52,0); back.add(camMod);
+  const camBody=new T.Mesh(rslab(.36,.78,.17,.012),K(new T.MeshStandardMaterial({color:0x121216,metalness:.4,roughness:.38}))); camBody.position.z=.04; camMod.add(camBody);
+  const ringM=K(new T.MeshStandardMaterial({color:0x3a3a42,metalness:.85,roughness:.25})), lensM=K(new T.MeshStandardMaterial({color:0x020204,metalness:.2,roughness:.08}));
+  const lens=(x,y)=>{const r=new T.Mesh(K(new T.CylinderGeometry(.115,.12,.05,32)),ringM);r.rotation.x=Math.PI/2;r.position.set(x,y,.1);camMod.add(r);const l=new T.Mesh(K(new T.CylinderGeometry(.082,.082,.02,32)),lensM);l.rotation.x=Math.PI/2;l.position.set(x,y,.127);camMod.add(l);};
+  lens(0,.19); lens(0,-.19);
+  const flash=new T.Mesh(K(new T.CylinderGeometry(.045,.045,.02,24)),K(new T.MeshStandardMaterial({color:0xe9e3d2,emissive:0x2a2720,roughness:.4})));flash.rotation.x=Math.PI/2;flash.position.set(.34,.24,.0);camMod.add(flash);
+  const mic=new T.Mesh(K(new T.CylinderGeometry(.022,.022,.02,16)),lensM);mic.rotation.x=Math.PI/2;mic.position.set(.34,.08,.0);camMod.add(mic);
+  {const ms=[[[6,94],[6,27],[25,8],[25,94]],[[31,8],[47,8],[72,94],[56,94]],[[75,6],[94,6],[94,73],[75,92]]].map(pts=>{const sh=new T.Shape();pts.forEach(([x,y],i)=>{const X=(x-50)/100*.42,Y=-(y-50)/100*.42;i?sh.lineTo(X,Y):sh.moveTo(X,Y);});return sh;});
+   const mark=new T.Mesh(K(new T.ShapeGeometry(ms)),K(new T.MeshStandardMaterial({color:0x2a2a31,metalness:.9,roughness:.3})));mark.position.set(0,-.1,.003);back.add(mark);}
   const pbez=new T.Mesh(rplane(PW-.04,PH-.04,.23),black); pbez.position.z=.0; phone.add(pbez);
   const pMat=K(new T.MeshBasicMaterial({color:0xffffff,toneMapped:false}));
   const pscr=new T.Mesh(rplane(PSW,PSH,.19),pMat); pscr.position.z=.004; phone.add(pscr);
